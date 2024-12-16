@@ -1,7 +1,7 @@
 const {Client,GatewayIntentBits} = require("discord.js");
-const config = require("./config.json");
-const button = require("./button");
 const moment = require("moment");
+require('dotenv').config();
+
 moment.locale('pt-br');
 
 
@@ -41,7 +41,7 @@ client.on("guildCreate", guild => {
         const usuario = message.author;
         const usuarioid = usuario.id;
         
-        if (message.content === "/start") {
+        if (message.content === "!start") {
             limite++
 
             if (limite > 1 ){
@@ -64,7 +64,7 @@ client.on("guildCreate", guild => {
             console.log(Data);
         }
     
-        if (message.content === "/end") {
+        if (message.content === "!end") {
             if (!usuarios[usuarioid]) {
                 await message.channel.send(`Por favor, inicie uma sessão primeiro usando o comando /start.`);
                 return;
@@ -84,7 +84,7 @@ client.on("guildCreate", guild => {
     
             const Data1 = fim.format("Do MMMM YYYY");
             const horario = fim.format("h:mm:ss a");
-        await message.channel.send(`O site rockseat que estava sendo ultilizado por ${usuario} foi liberado no horario: ${horario} e na data: ${Data1} . O site foi ultilizado: ${calculoTempo} @everyone `);
+        await message.channel.send(`O site rockseat que estava sendo utilizado por ${usuario} foi liberado no horario: ${horario} e na data: ${Data1} . O site foi utilizado: ${calculoTempo} @everyone `);
    
         console.log(horario);
    
@@ -109,4 +109,5 @@ client.on("messageCreate", async (message) => {
 });
 */
 
-client.login(config.token);
+client.login(process.env.TOKEN);
+
