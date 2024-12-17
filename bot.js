@@ -3,20 +3,7 @@ const moment = require("moment-timezone");
 moment.locale("pt-br");
 require("dotenv").config();
 
-
-var a = moment.utc("2013-11-18 11:55").tz("Asia/Taipei");
-var b = moment.utc("2013-11-18 11:55").tz("America/Sao_Paulo");
-
-a.format(); 
-b.format(); 
-
-a.utc().format(); 
-b.utc().format(); 
-
-
-moment().tz("America/Sao_Paulo").format();
-
-
+moment.tz.setDefault("America/Sao_Paulo");
 
 const client = new Client({
     intents: [
