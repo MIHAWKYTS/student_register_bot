@@ -159,6 +159,24 @@ client.on("messageCreate", async (message) => {
         const horario = fim.format("h:mm:ss a");
     
 
+        (async () => {
+            try {
+                await db.execute(`
+                    CREATE TABLE IF NOT EXISTS BANCO_HORAS (
+                        id INT AUTO_INCREMENT PRIMARY KEY,
+                        id_discord  INT NOT NULL,
+                        Nome_Discord VARCHAR(255) NOT NULL,
+                        inicio DATETIME NOT NULL,
+                        fim DATETIME NOT NULL,
+                        tempo_utilizado DATETIME NOT NULL
+                    )
+                `);
+                console.log("Tabela BANCO_HORAS verificada/criada com sucesso.");
+            } catch (error) {
+                console.error("Erro ao criar/verificar tabela BANCO_HORAS:", error);
+            }
+        })();
+        
 
         try{        
             await db.execute(
