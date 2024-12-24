@@ -4,6 +4,10 @@ moment.locale("pt-br");
 require("dotenv").config();
 
 moment.tz.setDefault("America/Sao_Paulo");
+const mysql = require('mysql2/promise');
+
+
+
 
 const client = new Client({
     intents: [
@@ -12,6 +16,15 @@ const client = new Client({
         GatewayIntentBits.MessageContent,
     ],
 });
+
+const db = mysql.createPool({
+host: process.env.DB_HOST,
+user: process.env.DB_USER,
+password: process.env.DB_PASSWORD,
+database: process.env.DB_NAME,
+port: proccess.env.DB_PORT,
+})
+
 
 const usuarios = {};
 let limite = 0;
@@ -131,6 +144,24 @@ client.on("messageCreate", async (message) => {
 
         const data = fim.format("Do MMMM YYYY");
         const horario = fim.format("h:mm:ss a");
+    
+
+
+        try{        
+            await db.execute(
+                'INSERT INTO BANCO_HORAS (id_discord, Nome_Discord, inicio, fim, duracao) VALUES (?, ?, ?, ?, ?)',
+              [
+                usuarioid,
+                usuario.username,
+                inicio.format("YYYY-MM-DD HH:mm:ss"),
+                fim.format("YYYY-MM-DD HH:mm:ss"),
+                tempoUtilizado,
+              ]
+            );
+            console.log('Dados enviado com sucesso');
+        }catch(error){
+            console.error('Dados não enviados', error);
+        }
 
         await message.channel.send(
             `O site Rockseat que estava sendo utilizado por ${usuario} foi liberado no horário: ${horario} e na data: ${data}. O site foi utilizado por: ${tempoUtilizado}. @everyone`
