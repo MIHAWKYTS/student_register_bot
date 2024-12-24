@@ -18,12 +18,12 @@ const client = new Client({
 });
 
 const db = mysql.createPool({
-host: process.env.DB_HOST,
-user: process.env.DB_USER,
-password: process.env.DB_PASSWORD,
-database: process.env.DB_NAME,
-port: process.env.DB_PORT,
-})
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME, 
+    port: process.env.DB_PORT,
+});
 
 
 const usuarios = {};
@@ -54,6 +54,19 @@ client.on("messageCreate", async (message) => {
     const usuario = message.author;
     const usuarioid = usuario.id;
 
+
+
+    (async () => {
+        try {
+            await db.query('SELECT 1');
+            console.log('Conexão com o banco de dados estabelecida com sucesso.');
+        } catch (error) {
+            console.error('Erro ao conectar ao banco de dados:', error);
+        }
+    })();
+    
+    console.log("DB_HOST:", process.env.DB_HOST);
+    console.log("DB_NAME:", process.env.DB_NAME);
 
     if (message.content === "!start") {
         if (limite > 0) {
