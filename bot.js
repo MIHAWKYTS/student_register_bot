@@ -180,7 +180,7 @@ client.on("messageCreate", async (message) => {
 
         try{        
             await db.execute(
-                'INSERT INTO BANCO_HORAS (id_discord, Nome_Discord, inicio, fim, duracao) VALUES (?, ?, ?, ?, ?)',
+                'INSERT INTO BANCO_HORAS (id_discord, Nome_Discord, inicio, fim, tempoUtilizado) VALUES (?, ?, ?, ?, ?)',
               [
                 usuarioid,
                 usuario.username,
