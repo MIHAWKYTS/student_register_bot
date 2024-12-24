@@ -167,8 +167,7 @@ client.on("messageCreate", async (message) => {
                         id_discord  INT NOT NULL,
                         Nome_Discord VARCHAR(255) NOT NULL,
                         inicio DATETIME NOT NULL,
-                        fim DATETIME NOT NULL,
-                        tempo_utilizado DATETIME NOT NULL
+                        tempoUtilizado DATETIME NOT NULL
                     )
                 `);
                 console.log("Tabela BANCO_HORAS verificada/criada com sucesso.");
