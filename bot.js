@@ -162,24 +162,24 @@ client.on("messageCreate", async (message) => {
         (async () => {
             try {
                 await db.execute(`
-                    CREATE TABLE IF NOT EXISTS BANCO_HORAS (
+                    CREATE TABLE IF NOT EXISTS Banco_horas (
                         id INT AUTO_INCREMENT PRIMARY KEY,
                         id_discord  INT NOT NULL,
                         Nome_Discord VARCHAR(255) NOT NULL,
                         inicio DATETIME NOT NULL,
-                        tempoUtilizado DATETIME NOT NULL
+                        tempoUtilizado VARCHAR(250) NOT NULL
                     )
                 `);
-                console.log("Tabela BANCO_HORAS verificada/criada com sucesso.");
+                console.log("Tabela Banco_horas verificada/criada com sucesso.");
             } catch (error) {
-                console.error("Erro ao criar/verificar tabela BANCO_HORAS:", error);
+                console.error("Erro ao criar/verificar tabela Banco_horas:", error);
             }
         })();
         
 
         try{        
             await db.execute(
-                'INSERT INTO BANCO_HORAS (id_discord, Nome_Discord, inicio, fim, tempoUtilizado) VALUES (?, ?, ?, ?, ?)',
+                'INSERT INTO Banco_horas (id_discord, Nome_Discord, inicio, fim, tempoUtilizado) VALUES (?, ?, ?, ?, ?)',
               [
                 usuarioid,
                 usuario.username,
