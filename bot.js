@@ -55,7 +55,6 @@ client.on("messageCreate", async (message) => {
     const usuarioid = usuario.id;
 
 
-
     (async () => {
         try {
             await db.query('SELECT 1');
@@ -86,7 +85,7 @@ client.on("messageCreate", async (message) => {
         usuarios[usuarioid] = { inicio, confirmacao: false };
 
         const data = inicio.format("Do MMMM YYYY");
-        const horario = inicio.format("h:mm:ss a");
+        const horario = inicio.format("h:mm:ss");
 
         await message.channel.send(
             `O site Rockseat está sendo usado por ${usuario} começando no horário: ${horario} e na data: ${data}. @everyone`
@@ -162,7 +161,7 @@ client.on("messageCreate", async (message) => {
         (async () => {
             try {
                 await db.execute(`
-                    CREATE TABLE IF NOT EXISTS Banco_horas (
+                    CREATE TABLE IF NOT EXISTS DADOS_DISCORD (
                         id INT AUTO_INCREMENT PRIMARY KEY,
                         id_discord  INT NOT NULL,
                         Nome_Discord VARCHAR(255) NOT NULL,
@@ -179,7 +178,7 @@ client.on("messageCreate", async (message) => {
 
         try{        
             await db.execute(
-                'INSERT INTO Banco_horas (id_discord, Nome_Discord, inicio, fim, tempoUtilizado) VALUES (?, ?, ?, ?, ?)',
+                'INSERT INTO DADOS_DISCORD (id_discord, Nome_Discord, inicio, fim,    ) VALUES (?, ?, ?, ?, ?)',
               [
                 usuarioid,
                 usuario.username,
