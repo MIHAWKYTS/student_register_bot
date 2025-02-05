@@ -12,6 +12,8 @@ RUN npm install
 
 # Copie o restante do código da aplicação para dentro do contêiner
 COPY . .
+COPY ./prisma prisma
+
 
 # Exponha a porta (caso o bot use uma porta para o Express ou outra API)
 # EXPOSE 3000
