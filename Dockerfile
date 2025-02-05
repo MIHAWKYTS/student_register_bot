@@ -7,13 +7,17 @@ WORKDIR /usr/src/app
 # Copie o arquivo package.json e package-lock.json (se existir)
 COPY package*.json ./
 
+# Copie os arquivos do Prisma
+COPY prisma ./prisma/
+
 # Instale as dependências do projeto
 RUN npm install
 
+# Gere o cliente Prisma
+RUN npx prisma generate
+
 # Copie o restante do código da aplicação para dentro do contêiner
 COPY . .
-COPY ./prisma prisma
-
 
 # Exponha a porta (caso o bot use uma porta para o Express ou outra API)
 # EXPOSE 3000
