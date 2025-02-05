@@ -52,18 +52,18 @@ client.on("messageCreate", async (message) => {
         where: { nome: usuario }
     })
 
-    if (!usuarioExiste) {
-        let novoUsuario = await prisma.banco_horas.create({
-            data: {
-                nome: usuario,
-                inicio: moment(),
-                status: true,
-            }
-        })
-    }
     if (message.content === "!start") {
-
-
+        
+        if (!usuarioExiste) {
+            let novoUsuario = await prisma.banco_horas.create({
+                data: {
+                    nome: usuario,
+                    inicio: moment(),
+                    status: true,
+                }
+            })
+        }
+        
         if (usuarioExiste && usuarioExiste.status === true) {
             await message.channel.send(
                 `Você já iniciou uma sessão! Finalize antes de começar outra.`
