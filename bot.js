@@ -52,7 +52,7 @@ client.on("messageCreate", async (message) => {
             data: {
                 nome: usuario,
                 inicio: moment().toDate(),
-                status: false, // Mudado para falso para evitar erro na lógica
+                status: false, 
             },
         });
     }
