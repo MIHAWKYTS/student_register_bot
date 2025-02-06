@@ -52,17 +52,38 @@ client.on("messageCreate", async (message) => {
         where: { nome: usuario }
     })
 
+    if (!usuarioExiste) {
+        let novoUsuario = await prisma.banco_horas.create({
+            data: {
+                nome: usuario,
+                inicio: moment(),
+                status: true,
+            }
+        })
+    }
     if (message.content === "!start") {
         
-        if (!usuarioExiste) {
-            let novoUsuario = await prisma.banco_horas.create({
-                data: {
-                    nome: usuario,
-                    inicio: moment(),
-                    status: true,
+        if(usuarioExiste.nome === true){
+            
+            
+            if (usuarioExiste && usuarioExiste.status === true) {
+                await message.channel.send(
+                    `Você já iniciou uma sessão! Finalize antes de começar outra.`
+                );
+
+
+                if (!usuarioExiste) {
+                    let novoUsuario = await prisma.banco_horas.create({
+                        data: {
+                            nome: usuario,
+                            inicio: moment(),
+                            status: true,
+                        }
+                    })
                 }
-            })
-        }
+                
+                
+    if (message.content === "!start") {
         
         if (usuarioExiste && usuarioExiste.status === true) {
             await message.channel.send(
@@ -70,18 +91,18 @@ client.on("messageCreate", async (message) => {
             );
             return;
         }
-
-       // if(usuarioExiste && )
-
-
+        
+        // if(usuarioExiste && )
+        
+        
         const inicio = moment();
         usuarios[usuarioid] = { inicio, confirmacao: false };
-
+        
         const data = inicio.format("Do MMMM YYYY");
         const horario = inicio.format("HH:mm:ss");
-
+        
         if (usuarioExiste && usuarioExiste.status === false) {
-
+            
             await message.channel.send(
                 `O site Rockseat está sendo usado por ${usuario} começando no horário: ${horario} e na data: ${data}. @everyone`
             );
@@ -101,7 +122,7 @@ client.on("messageCreate", async (message) => {
                 await message.channel.send(
                     `${usuario}, confirme que ainda está utilizando o site digitando "sim".`
                 );
-
+                
                 try {
                     const filter = (m) => m.author.id === usuarioid;
                     const collected = await message.channel.awaitMessages({
@@ -110,7 +131,7 @@ client.on("messageCreate", async (message) => {
                         time: 120000,
                         errors: ["time"],
                     });
-
+                    
                     const resposta = collected.first().content.toUpperCase();
                     if (resposta === "SIM") {
                         await message.channel.send(
@@ -128,12 +149,13 @@ client.on("messageCreate", async (message) => {
                     await message.channel.send(
                         "Tempo de resposta esgotado. Sessão encerrada."
                     );
-
+                    
                 }
             }
         }, 3600000);
     }
-
+    }
+    
 
     if (message.content === "!end") {
         if (usuarioExiste && usuarioExiste.status === false) {
