@@ -137,7 +137,7 @@ client.on("messageCreate", async (message) => {
     }
     }
     
-    
+
     if (message.content === "!end") {
         if (usuarioExiste && usuarioExiste.status === false) {
             await message.channel.send(
