@@ -7,9 +7,6 @@ require("dotenv").config();
 moment.tz.setDefault("America/Sao_Paulo");
 const prisma = new PrismaClient();
 
-
-
-
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -17,7 +14,6 @@ const client = new Client({
         GatewayIntentBits.MessageContent,
     ],
 });
-
 
 const usuarios = {};
 let limite = 0;
@@ -47,78 +43,54 @@ client.on("messageCreate", async (message) => {
     const usuario = message.author.username;
     const usuarioid = message.author.id;
 
-
-    const usuarioExiste = await prisma.banco_horas.findFirst({
-        where: { nome: usuario }
-    })
+    let usuarioExiste = await prisma.banco_horas.findFirst({
+        where: { nome: usuario },
+    });
 
     if (!usuarioExiste) {
-        let novoUsuario = await prisma.banco_horas.create({
+        usuarioExiste = await prisma.banco_horas.create({
             data: {
                 nome: usuario,
-                inicio: moment(),
+                inicio: moment().toDate(),
                 status: true,
-            }
-        })
+            },
+        });
     }
+
     if (message.content === "!start") {
-        
+      
         if(usuarioExiste.nome === true){
-            
+
             
             if (usuarioExiste && usuarioExiste.status === true) {
                 await message.channel.send(
-                    `Você já iniciou uma sessão! Finalize antes de começar outra.`
-                );
-
-
-                if (!usuarioExiste) {
-                    let novoUsuario = await prisma.banco_horas.create({
-                        data: {
-                            nome: usuario,
-                            inicio: moment(),
-                            status: true,
-                        }
-                    })
-                }
-                
-                
-    if (message.content === "!start") {
-        
-        if (usuarioExiste && usuarioExiste.status === true) {
-            await message.channel.send(
                 `Você já iniciou uma sessão! Finalize antes de começar outra.`
             );
             return;
         }
-        
-        // if(usuarioExiste && )
-        
-        
+
         const inicio = moment();
         usuarios[usuarioid] = { inicio, confirmacao: false };
         
         const data = inicio.format("Do MMMM YYYY");
         const horario = inicio.format("HH:mm:ss");
         
-        if (usuarioExiste && usuarioExiste.status === false) {
-            
-            await message.channel.send(
-                `O site Rockseat está sendo usado por ${usuario} começando no horário: ${horario} e na data: ${data}. @everyone`
-            );
+        await message.channel.send(
+            `O site Rockseat está sendo usado por ${usuario} começando no horário: ${horario} e na data: ${data}. @everyone`
+        );
+        
+        console.log(`Sessão iniciada: ${data} às ${horario}`);
+        
+        await prisma.banco_horas.update({
+            where: { id: usuarioExiste.id },
+            data: {
+                inicio: moment().toDate(),
+                status: true,
+            },
+        });
 
-            console.log(`Sessão iniciada: ${data} às ${horario}`);
-
-            await prisma.banco_horas.update({
-                where: { id: usuarioExiste.id },
-                data: {
-                    inicio: moment(),
-                    status: true,
-                }
-            })
-        }
         setTimeout(async () => {
-            if (!usuarioExiste.id.confirmacao) {
+            if (!usuarios[usuarioid]?.confirmacao) {
                 await message.channel.send(
                     `${usuario}, confirme que ainda está utilizando o site digitando "sim".`
                 );
@@ -137,26 +109,25 @@ client.on("messageCreate", async (message) => {
                         await message.channel.send(
                             "Pode continuar utilizando o site."
                         );
-                        usuarioExiste.id.confirmacao = true;
+                        usuarios[usuarioid].confirmacao = true;
                     } else {
                         await message.channel.send(
                             "Sessão encerrada por falta de confirmação."
                         );
-                        delete usuarioExiste.id;
+                        delete usuarios[usuarioid];
                         limite = 0;
                     }
                 } catch (error) {
                     await message.channel.send(
                         "Tempo de resposta esgotado. Sessão encerrada."
                     );
-                    
+                    delete usuarios[usuarioid];
                 }
             }
         }, 3600000);
     }
     }
     
-
     if (message.content === "!end") {
         if (usuarioExiste && usuarioExiste.status === false) {
             await message.channel.send(
@@ -164,8 +135,8 @@ client.on("messageCreate", async (message) => {
             );
             return;
         }
-        if (usuarioExiste && usuarioExiste.status === true) {
 
+        if (usuarioExiste && usuarioExiste.status === true) {
             const inicio = moment(usuarioExiste.inicio);
             const fim = moment();
 
@@ -202,9 +173,4 @@ client.on("messageCreate", async (message) => {
     }
 });
 
-
-
-
-
 client.login(process.env.TOKEN);
-
