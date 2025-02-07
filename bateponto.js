@@ -33,7 +33,7 @@ let limite = 0;
 Comeco = moment;
 
 
-if(MessageContent === "!iniciar"){
+if(MessageContent === "!test"){
     
     if (usuarios[usuarioid] || limite ) {
         await message.channel.send(
@@ -44,28 +44,8 @@ if(MessageContent === "!iniciar"){
     
     Data = Comeco.format("Do MMMM YYYY");
     Entrada = Comeco.format("h:mm:s");
-    
-    await Message.channel.send(`Horario de entrada registrada. ${Entrada}`)
-    console.log(`Ponto iniciado com sucesso`);
+ 
+    if (usuario[usuarioid] && usuarioid )  
+
+
 }
-
-try{
-    await db.execute(
-        'INSERT INTO BANCO_DE_HORAS (Nome_discord, Data, Entrada) VALUES (?, ?, ?)'
-        [
-            usuario.username,
-            Data = Comeco.format("Do MMMM YYYY"),
-            Entrada = Comeco.format("h:mm:s")
-        ]
-    );console.log('Dados enviados com sucesso')
-}catch(error){
-    console.error('Não foi possível enviar os dados')
-}
-
-
-
-
-
-
-
-//tenho que fazer uma verificação para ele finalizar o ponto de quem iniciou individualmente independente da ordem
