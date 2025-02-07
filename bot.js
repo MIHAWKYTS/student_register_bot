@@ -17,6 +17,7 @@ const client = new Client({
 
 const usuarios = {};
 let limite = 0;
+time = 0;
 
 client.on("ready", () => {
     console.log(
@@ -155,6 +156,8 @@ client.on("messageCreate", async (message) => {
                         status: false,
                     },
                 });
+
+                time = 0;
 
                 await message.channel.send(
                     `O site Rockseat que estava sendo utilizado por ${usuario} foi liberado no horário: ${horario} e na data: ${data}. O site foi utilizado por: ${tempoUtilizado}. @everyone`
