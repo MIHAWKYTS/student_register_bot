@@ -87,7 +87,7 @@ client.on("messageCreate", async (message) => {
         });
 
         setTimeout(async () => {
-            if (!usuarioExiste.id?.confirmacao) {
+            if (!usuarios[usuarioid]?.confirmacao) {
                 await message.channel.send(
                     `${usuario}, confirme que ainda está utilizando o site digitando "sim".`
                 );
