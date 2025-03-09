@@ -121,7 +121,7 @@ client.on("messageCreate", async (message) => {
                     delete usuarios[usuarioid];
                 }
             }
-        }, 360000);
+        }, 3600000);
     }
 
     if (message.content === "!end") {
