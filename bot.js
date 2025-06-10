@@ -113,11 +113,13 @@ client.on("messageCreate", async (message) => {
                     } else {
                         await message.channel.send("Resposta inválida. Sessão encerrada.");
                         delete usuarios[usuarioid];
+                        usuarios[usuario.status]= 'false'
                         limite = 0;
                     }
                 } catch (error) {
                     await message.channel.send("⏰ Tempo de resposta esgotado. Sessão encerrada.");
                     delete usuarios[usuarioid];
+                    usuarios[usuario.status]= 'false'
                     limite = 0;
                 }
             }
