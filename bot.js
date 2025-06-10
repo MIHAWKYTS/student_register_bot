@@ -114,7 +114,7 @@ const collected = await message.channel.awaitMessages({
                         await message.channel.send("Pode continuar utilizando o site.");
                         usuarios[usuarioid].confirmacao = true;
                     } else if (resposta === "NÃO" || resposta === "NAO") {
-                        await message.channel.send("Sessão encerrada por falta de confirmação.");
+                        await message.channel.send("Sessão encerrada por negação.");
                         delete usuarios[usuarioid];
                         limite = 0;
                     } else {
@@ -141,7 +141,7 @@ const collected = await message.channel.awaitMessages({
                     limite = 0;
                 }
             }
-        }, 36);
+        }, 3600000);
 
         return;
     }
