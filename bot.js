@@ -121,7 +121,7 @@ client.on("messageCreate", async (message) => {
                     limite = 0;
                 }
             }
-        }, 3600000);
+        }, 36);
 
         return;
     }
