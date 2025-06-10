@@ -94,7 +94,14 @@ client.on("messageCreate", async (message) => {
 
                 try {
                     const filter = (m) => m.author.id === usuarioid;
-                    const collected = await message.channel.awaitMessages({
+                      await prisma.banco_horas.update({
+            where: { id: usuarioExiste.id },
+            data: {
+                inicio: moment().toDate(),
+                status: true,
+            },
+        });
+const collected = await message.channel.awaitMessages({
                         filter,
                         max: 1,
                         time: 120000,
@@ -113,13 +120,24 @@ client.on("messageCreate", async (message) => {
                     } else {
                         await message.channel.send("Resposta inválida. Sessão encerrada.");
                         delete usuarios[usuarioid];
-                        usuarios[usuario.status]= 'false'
+                         await prisma.banco_horas.update({
+                    where: { id: usuarioExiste.id },
+                    data: {
+                         status: false,
+            },
+        });
                         limite = 0;
                     }
                 } catch (error) {
                     await message.channel.send("⏰ Tempo de resposta esgotado. Sessão encerrada.");
                     delete usuarios[usuarioid];
-                    usuarios[usuario.status]= 'false'
+                      await prisma.banco_horas.update({
+                    where: { id: usuarioExiste.id },
+                    data: {
+                         status: false,
+            },
+        });
+
                     limite = 0;
                 }
             }
