@@ -17,7 +17,7 @@ const client = new Client({
 
 const usuarios = {};
 let limite = 0;
-time = 0;
+let time = 0;
 
 client.on("ready", () => {
     console.log(
@@ -53,7 +53,7 @@ client.on("messageCreate", async (message) => {
             data: {
                 nome: usuario,
                 inicio: moment().toDate(),
-                status: false, 
+                status: false,
             },
         });
     }
@@ -89,7 +89,7 @@ client.on("messageCreate", async (message) => {
         setTimeout(async () => {
             if (!usuarios[usuarioid]?.confirmacao) {
                 await message.channel.send(
-                    `${usuario}, confirme que ainda está utilizando o site digitando "sim".`
+                    `${usuario}, confirme que ainda está utilizando o site digitando "sim", se não tiver digite não.`
                 );
 
                 try {
@@ -102,26 +102,28 @@ client.on("messageCreate", async (message) => {
                     });
 
                     const resposta = collected.first().content.toUpperCase();
+
                     if (resposta === "SIM") {
-                        await message.channel.send(
-                            "Pode continuar utilizando o site."
-                        );
+                        await message.channel.send("Pode continuar utilizando o site.");
                         usuarios[usuarioid].confirmacao = true;
+                    } else if (resposta === "NÃO" || resposta === "NAO") {
+                        await message.channel.send("Sessão encerrada por falta de confirmação.");
+                        delete usuarios[usuarioid];
+                        limite = 0;
                     } else {
-                        await message.channel.send(
-                            "Sessão encerrada por falta de confirmação."
-                        );
+                        await message.channel.send("Resposta inválida. Sessão encerrada.");
                         delete usuarios[usuarioid];
                         limite = 0;
                     }
                 } catch (error) {
-                    await message.channel.send(
-                        "Tempo de resposta esgotado. Sessão encerrada."
-                    );
+                    await message.channel.send("⏰ Tempo de resposta esgotado. Sessão encerrada.");
                     delete usuarios[usuarioid];
+                    limite = 0;
                 }
             }
         }, 3600000);
+
+        return;
     }
 
     if (message.content === "!end") {
@@ -157,13 +159,13 @@ client.on("messageCreate", async (message) => {
                     },
                 });
 
-                time = 0;
-
                 await message.channel.send(
                     `O site Rockseat que estava sendo utilizado por ${usuario} foi liberado no horário: ${horario} e na data: ${data}. O site foi utilizado por: ${tempoUtilizado}. @everyone`
                 );
 
                 console.log(`Sessão encerrada: ${data} às ${horario}`);
+                delete usuarios[usuarioid];
+                limite = 0;
             } catch (err) {
                 console.error("Erro ao atualizar banco de horas:", err);
             }
