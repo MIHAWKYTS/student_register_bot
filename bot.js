@@ -170,14 +170,20 @@ const collected = await message.channel.awaitMessages({
             const horario = fim.format("HH:mm:ss");
 
             try {
-                await prisma.banco_horas.update({
-                    where: { id: usuarioExiste.id },
-                    data: {
-                        saida: fim.toDate(),
-                        tempoUtilizado: tempoUtilizadoSegundos,
-                        status: false,
-                    },
-                });
+                const registroAtual = await prisma.banco_horas.findUnique({
+  where: { id: usuarioExiste.id },
+  select: { tempoUtilizado: true },
+});
+const tempoTotal = (registroAtual?.tempoUtilizado || 0) + tempoUtilizadoSegundos;
+
+await prisma.banco_horas.update({
+  where: { id: usuarioExiste.id },
+  data: {
+    saida: fim.toDate(),
+    tempoUtilizado: tempoTotal,
+    status: false,
+  },
+});
 
                 await message.channel.send(
                     `O site Rockseat que estava sendo utilizado por ${usuario} foi liberado no horário: ${horario} e na data: ${data}. O site foi utilizado por: ${tempoUtilizado}. @everyone`
